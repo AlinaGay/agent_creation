@@ -37,12 +37,6 @@ system_prompt += f"With this context, please chat with the user, always staying 
 print('system_prompt: ', system_prompt)
 
 
-def chat_1(message, history):
-    messages = [{"role": "system", "content": system_prompt}] + history + [{"role": "user", "content": message}]
-    response = openai.chat.completions.create(model="gpt-4o-mini", messages=messages)
-    return response.choices[0].message.content
-
-
 class Evaluation(BaseModel):
     is_acceptable: bool
     feedback: str
