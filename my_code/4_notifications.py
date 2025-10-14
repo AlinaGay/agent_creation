@@ -38,4 +38,29 @@ def record_user_details(email, name="Name not provided", notes="not provided"):
 def record_unknown_question(question):
     push(f"Recording {question} asked that I couldn't answer")
     return {"recorded": "ok"}
+
+record_user_details_json = {
+    "name": "record_user_details",
+    "description": "Use this tool to record that a user is interested in being in touch and provided an email address",
+    "parameters": {
+        "type": "object",
+        "properties": {
+            "email": {
+                "type": "string",
+                "description": "The email address of this user"
+            },
+            "name": {
+                "type": "string",
+                "description": "The user's name, if they provided it"
+            }
+            ,
+            "notes": {
+                "type": "string",
+                "description": "Any additional information about the conversation that's worth recording to give context"
+            }
+        },
+        "required": ["email"],
+        "additionalProperties": False
+    }
+}
    
