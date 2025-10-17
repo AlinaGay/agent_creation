@@ -136,4 +136,6 @@ def chat(message, history):
             messages.extend(results)
         else:
             done = True
-    return response.choices[0].message.content    
+    return response.choices[0].message.content
+
+gr.ChatInterface(chat, type="messages").launch()
