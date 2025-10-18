@@ -87,7 +87,7 @@ def rerun(reply, message, history, feedback):
     return response.choices[0].message.content
 
 
-def chat_2(message, history):
+def chat(message, history):
     if "patient" in message:
         system = system_prompt + "\n\nEverything in your reply needs to be in pig latin - \
               it is mandatory that you respond only and entirely in pig latin"
@@ -108,4 +108,4 @@ def chat_2(message, history):
     return reply
 
 
-gradio.ChatInterface(chat_2, type="messages").launch()
+gradio.ChatInterface(chat, type="messages").launch()
