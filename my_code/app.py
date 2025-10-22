@@ -70,3 +70,18 @@ record_unknown_question_json = {
 
 tools = [{"type": "function", "function": record_user_details_json},
         {"type": "function", "function": record_unknown_question_json}]
+
+
+class Me:
+    
+    def __init__(self):
+        self.openai = OpenAI()
+        self.name = "Ed Donner"
+        reader = PdfReader("me/linkedin.pdf")
+        self.linkedin = ""
+        for page in reader.pages:
+            text = page.extract_text()
+            if text:
+                self.linkedin += text
+        with open("me/summary.txt", "r", encoding="utf-8") as f:
+            self.summary = f.read()
