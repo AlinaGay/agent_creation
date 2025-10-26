@@ -1,0 +1,1 @@
+Software Developer with 6+ years in IT, focusing on Python backend and data-driven applications. Strong analytical background and hands-on experience with Django, Flask, REST APIs, and CI/CD. Currently exploring AI integration, LLMs, and agent-based architectures.
