@@ -56,3 +56,11 @@ with trace("Parallel col emails"):
 outputs = [result.final_output for result in results]
 for output in outputs:
     print(output + "\n\n")
+
+sales_picker = Agent(
+    name="sales_picker",
+    instructions="You pick the best cold sales email from the given options. \
+Imagine you are a customer and pick the one you are most likely to respond to. \
+Do not give an explanation; reply with the selected email only.",
+    model="gpt-4o-mini"
+)
