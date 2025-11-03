@@ -82,3 +82,47 @@ with trace("Selection from sales people"):
 
     print(f"Best sales email:\n{best.final_output}")
 
+
+sales_agent1 = Agent(
+        name="Professional Sales Agent",
+        instructions=instructions1,
+        model="gpt-4o-mini",
+)
+
+sales_agent2 = Agent(
+        name="Engaging Sales Agent",
+        instructions=instructions2,
+        model="gpt-4o-mini",
+)
+
+sales_agent3 = Agent(
+        name="Busy Sales Agent",
+        instructions=instructions3,
+        model="gpt-4o-mini",
+)
+
+@function_tool
+def send_email(body: str):
+    """Send out an email with the given body to all sales prospects via Resend."""
+
+    from_email = "opolskaya.alina@yandex.ru"
+    to_email = "opolskaia.alina@gmail.com"
+
+    headers = {
+        "Authorization": f"Bearer {RESEND_API_KEY}",
+        "Content-Type": "application/json"
+    }
+
+    payload = {
+        "from": f"Alina <{from_email}>",
+        "to": [to_email],
+        "subject": "Sales email",
+        "html": f"<p>{body}</p>"
+    }
+
+    response = requests.post("https://api.resend.com/emails", json=payload, headers=headers)
+
+    if response.status_code == 202:
+        return {"status": "success"}
+    else:
+        return {"status": "failure", "message": response.text}
