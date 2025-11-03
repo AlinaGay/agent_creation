@@ -83,24 +83,6 @@ with trace("Selection from sales people"):
     print(f"Best sales email:\n{best.final_output}")
 
 
-sales_agent1 = Agent(
-        name="Professional Sales Agent",
-        instructions=instructions1,
-        model="gpt-4o-mini",
-)
-
-sales_agent2 = Agent(
-        name="Engaging Sales Agent",
-        instructions=instructions2,
-        model="gpt-4o-mini",
-)
-
-sales_agent3 = Agent(
-        name="Busy Sales Agent",
-        instructions=instructions3,
-        model="gpt-4o-mini",
-)
-
 @function_tool
 def send_email(body: str):
     """Send out an email with the given body to all sales prospects via Resend."""
@@ -126,3 +108,16 @@ def send_email(body: str):
         return {"status": "success"}
     else:
         return {"status": "failure", "message": response.text}
+    
+
+# converting Agents to tools
+description = "Write a cold sales email"
+
+tool_1 = sales_agent_1.as_tool(tool_name="sales_agent_1", tool_description=description)
+tool_2 = sales_agent_2.as_tool(tool_name="sales_agent_2", tool_description=description)
+tool_3 = sales_agent_3.as_tool(tool_name="sales_agent_3", tool_description=description)
+
+tools = [tool_1, tool_2, tool_3, send_email]
+
+
+
