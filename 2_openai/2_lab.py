@@ -64,3 +64,21 @@ Imagine you are a customer and pick the one you are most likely to respond to. \
 Do not give an explanation; reply with the selected email only.",
     model="gpt-4o-mini"
 )
+
+
+message = "Write a cold sales email"
+
+with trace("Selection from sales people"):
+    results = await asyncio.gather(
+        Runner.run(sales_agent_1, message),
+        Runner.run(sales_agent_2, message),
+        Runner.run(sales_agent_3, message)
+    )
+    output = [result.final_output for result in results]
+
+    emails = "Cold sales emails: \n\n".join(outputs)
+
+    best = await Runner.run(sales_picker, emails)
+
+    print(f"Best sales email:\n{best.final_output}")
+
