@@ -119,5 +119,14 @@ tool_3 = sales_agent_3.as_tool(tool_name="sales_agent_3", tool_description=descr
 
 tools = [tool_1, tool_2, tool_3, send_email]
 
+instructions ="You are a sales manager working for ComplAI. You use the tools given to you to generate cold sales emails. \
+You never generate sales emails yourself; you always use the tools. \
+You try all 3 sales_agent tools once before choosing the best one. \
+You pick the single best email and use the send_email tool to send the best email (and only the best email) to the user."
 
+sales_manager = Agent(name="Sales Manager", instructions=instructions, tools=tools, model="gpt-4o-mini")
 
+message = "Send a cold sales email addressed to 'Dear CEO'"
+
+with trace("Sales manager"):
+    result = await Runner.run(sales_manager, message)
