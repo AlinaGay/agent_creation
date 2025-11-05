@@ -171,3 +171,38 @@ def send_html_email(subject: str, html_body: str) -> Dict[str, str]:
         return {"status": "success"}
     else:
         return {"status": "failure", "message": response.text}
+    
+instructions ="You are an email formatter and sender. You receive the body of an email to be sent. \
+You first use the subject_writer tool to write a subject for the email, then use the html_converter tool to convert the body to HTML. \
+Finally, you use the send_html_email tool to send the email with the subject and HTML body."
+
+emailer_agent = Agent(
+    name="Email Manager",
+    instructions=instructions,
+    tools=tools,
+    model="gpt-4o-mini",
+    handoff_description="Convert an email to HTML and send it"
+)
+
+tools = [tool_1, tool_2, tool_3]
+handoffs = [emailer_agent]
+
+sales_manager_instructions = "You are a sales manager working for ComplAI. You use the tools given to you to generate cold sales emails. \
+You never generate sales emails yourself; you always use the tools. \
+You try all 3 sales agent tools at least once before choosing the best one. \
+You can use the tools multiple times if you're not satisfied with the results from the first try. \
+You select the single best email using your own judgement of which email will be most effective. \
+After picking the email, you handoff to the Email Manager agent to format and send the email."
+
+sales_manager = Agent(
+    name="Sales Manager",
+    instructions=sales_manager_instructions,
+    tools=tools,
+    handoffs=handoffs,
+    model="gpt-4o-mini"
+)
+
+message = "Send out a cold sales email addressed to Dear CEO from Alice"
+
+with trace("Automated SDR"):
+    result = await Runner.run(sales_manager, message)
