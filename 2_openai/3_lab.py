@@ -46,3 +46,37 @@ You write witty, engaging cold emails that are likely to get a response."
 instructions3 = "You are a busy sales agent working for ComplAI, \
 a company that provides a SaaS tool for ensuring SOC2 compliance and preparing for audits, powered by AI. \
 You write concise, to the point cold emails."
+
+GEMINI_BASE_URL = "https://generativelanguage.googleapis.com/v1beta/openai/"
+DEEPSEEK_BASE_URL = "https://api.deepseek.com/v1"
+GROQ_BASE_URL = "https://api.groq.com/openai/v1"
+
+
+deepseek_client = AsyncOpenAI(base_url=DEEPSEEK_BASE_URL, api_key=deepseek_api_key)
+gemini_client = AsyncOpenAI(base_url=GEMINI_BASE_URL, api_key=google_api_key)
+groq_client = AsyncOpenAI(base_url=GROQ_BASE_URL, api_key=groq_api_key)
+
+deepseek_model = OpenAIChatCompletionsModel(model="deepseek-chat", openai_client=deepseek_client)
+gemini_model = OpenAIChatCompletionsModel(model="gemini-2.0-flash", openai_client=gemini_client)
+llama3_3_model = OpenAIChatCompletionsModel(model="llama-3.3-70b-versatile", openai_client=groq_client)
+
+sales_agent_1 = Agent(name="DeepSeek Sales Agent", instructions=instructions1, model=deepseek_model)
+sales_agent_2 = Agent(name="Gemini Sales Agent", instructions=instructions2, model=gemini_model)
+sales_agent_3 = Agent(name="Llama3.3 Sales Agent", instructions=instructions3,model=llama3_3_model)
+
+description = "Write a cold sales email"
+
+tool_1 = sales_agent_1.as_tool(tool_name="sales_agent_1", tool_description=description)
+tool_2 = sales_agent_2.as_tool(tool_description="sales_agent_2", tool_description=description)
+tool_3 = sales_agent_3.as_tool(tool_description="sales_agent_3", tool_description=description)
+
+@functional_tool
+def send_html_email(subject: str, html_body: str) -> Dict[str, str]:
+    """ Send out an email with the given subject and HTML body to all sales prospects """
+    sg = sendgrid.SendGridAPIClient(api_key=os.environ.get('SENDGRID_API_KEY'))
+    from_email = Email("ed@edwarddonner.com")  # Change to your verified sender
+    to_email = To("ed.donner@gmail.com")  # Change to your recipient
+    content = Content("text/html", html_body)
+    mail = Mail(from_email, to_email, subject, content).get()
+    sg.client.mail.send.post(request_body=mail)
+    return {"status": "success"}
