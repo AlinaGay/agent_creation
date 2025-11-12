@@ -74,8 +74,8 @@ tool_3 = sales_agent_3.as_tool(tool_description="sales_agent_3", tool_descriptio
 def send_html_email(subject: str, html_body: str) -> Dict[str, str]:
     """ Send out an email with the given subject and HTML body to all sales prospects """
     sg = sendgrid.SendGridAPIClient(api_key=os.environ.get('SENDGRID_API_KEY'))
-    from_email = Email("ed@edwarddonner.com")  # Change to your verified sender
-    to_email = To("ed.donner@gmail.com")  # Change to your recipient
+    from_email = Email("opolskaya.alina@yandex.ru")
+    to_email = To("opolskaia.alina@gmail.com")
     content = Content("text/html", html_body)
     mail = Mail(from_email, to_email, subject, content).get()
     sg.client.mail.send.post(request_body=mail)
