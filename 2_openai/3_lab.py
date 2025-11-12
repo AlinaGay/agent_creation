@@ -80,3 +80,18 @@ def send_html_email(subject: str, html_body: str) -> Dict[str, str]:
     mail = Mail(from_email, to_email, subject, content).get()
     sg.client.mail.send.post(request_body=mail)
     return {"status": "success"}
+
+subject_instructions = "You can write a subject for a cold sales email. \
+You are given a message and you need to write a subject for an email that is likely to get a response."
+
+html_instructions = "You can convert a text email body to an HTML email body. \
+You are given a text email body which might have some markdown \
+and you need to convert it to an HTML email body with simple, clear, compelling layout and design."
+
+subject_writer = Agent(name="Email subject writer", instructions=subject_instructions, model="gpt-4o-mini")
+subject_tool = subject_writer.as_tool(tool_name="subject_writer", tool_description="Write a subject for a cold sales email")
+
+html_converter = Agent(name="HTML email body converter", instructions=html_instructions, model="gpt-4o-mini")
+html_tool = html_converter.as_tool(tool_name="html_converter", tool_description="Convert a text email body to an HTML email body")
+
+email_tools = [subject_tool, html_tool, send_html_email]
